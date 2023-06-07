@@ -634,27 +634,6 @@ public class AllProcessInImage  extends JFrame implements  ActionListener{
         }
         return newImage;
     }
-//    public static void getSpecificColor(Image image, int x, int y) {
-//        if (image instanceof BufferedImage) {
-//            new Color(((BufferedImage) image).getRGB(x, y));
-//            return;
-//        }
-//        int width = image.getWidth(null);
-//        int height = image.getHeight(null);
-//        int[] pixels = new int[width * height];
-//        PixelGrabber grabber = new PixelGrabber(image, 0, 0, width, height, pixels, 0, width);
-//        try {
-//            grabber.grabPixels();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        int c = pixels[x * width + y];
-//        int  red = (c & 0x00ff0000) >> 16;
-//        int  green = (c & 0x0000ff00) >> 8;
-//        int  blue = c & 0x000000ff;
-//        System.out.println( "" +red + "              " + "          " + green +"            "+ blue );
-//
-//        new Color(red, green, blue);
-//    }
+
 
 }

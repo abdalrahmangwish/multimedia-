@@ -1,3 +1,7 @@
+import services.ImageColorSimilarityForInputImage;
+import services.SearchCropImageForMostColor;
+import services.SearchResizeImageForMostColor;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -12,29 +16,23 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Random;
 import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.imageio.ImageIO;
 
 
 public class TheSecondPart extends JFrame implements  ActionListener {
     JButton selectImage;
-    JButton searchImageForRedColorImage;
     JButton searchImageForGreenColorImage;
-    JButton searchForMostImage;
     JButton searchImageForSameDate;
     JButton searchImageForSameDimensions;
     JButton searchImageForInputColor;
+    JButton searchImageForCropInputImage;
+    JButton searchImageForResizeInputImage;
     JLabel introLabel;
 
     File FileNameForInitialState ;
@@ -58,6 +56,7 @@ public class TheSecondPart extends JFrame implements  ActionListener {
     showImageInInitialState =new JLabel();
     showImageInInitialState.setBounds(50 ,200 ,500,500);
     this.add(showImageInInitialState);
+
 
  selectImage.addActionListener(
 
@@ -90,388 +89,69 @@ public class TheSecondPart extends JFrame implements  ActionListener {
         searchImageForGreenColorImage = new JButton("searchImageForGreenColorImage");
         searchImageForGreenColorImage.setBounds(700 , 100, 300 , 30);
         this.add(searchImageForGreenColorImage);
-        //TODO
-        searchImageForRedColorImage = new JButton("searchImageForRedColorImage");
-        searchImageForRedColorImage.setBounds(700 , 200, 300 , 30);
-        this.add(searchImageForRedColorImage);
-        //TODO
-        searchForMostImage = new JButton("searchForMostImage");
-        searchForMostImage.setBounds(700 , 300, 300 , 30);
-        this.add(searchForMostImage);
-        //TODO
+         //TODO
         searchImageForSameDate = new JButton("searchImageForSameDate");
-        searchImageForSameDate.setBounds(700 , 400, 300 , 30);
+        searchImageForSameDate.setBounds(700 , 300, 300 , 30);
         this.add(searchImageForSameDate);
         //TODO
         searchImageForSameDimensions = new JButton("searchImageForSameDimensions");
-        searchImageForSameDimensions.setBounds(700 , 500, 300 , 30);
+        searchImageForSameDimensions.setBounds(700 , 400, 300 , 30);
         this.add(searchImageForSameDimensions);
         //TODO
         searchImageForInputColor = new JButton("searchImageForInputColor");
-        searchImageForInputColor.setBounds(700 , 600, 300 , 30);
+        searchImageForInputColor.setBounds(700 , 500, 300 , 30);
         this.add(searchImageForInputColor);
-searchImageForGreenColorImage.addActionListener(
-        e -> {
-            String targetImagePathForGreenImage = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\12.jpg";
-            String directoryPathForGreenImage = "C:\\Users\\AbdAlrahman\\Desktop\\saves";
-            String outputDirectoryPathForGreenImage = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\greenImage";
-
-            File directory = new File(directoryPathForGreenImage);
-            File[] imageFiles = directory.listFiles();
-
-            BufferedImage targetImage;
-            try {
-                targetImage = ImageIO.read(new File(targetImagePathForGreenImage));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                return;
-            }
-
-            List<File> similarImages = new ArrayList<>();
-
-            for (File imageFile : imageFiles) {
-                if (imageFile.isFile()) {
-                    BufferedImage image;
-                    try {
-                        image = ImageIO.read(imageFile);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        continue;
-                    }
-
-                    if (image == null) {
-                        continue; // تجاهل الصورة إذا كانت غير صالحة
-                    }
-
-                    double greenRatio = getGreenRatio(image);
-
-                    // قيمة عتبة اللون الأخضر يمكن تعديلها هنا
-                    double greenThreshold = 0.4;
-
-                    if (greenRatio >= greenThreshold) {
-                        similarImages.add(imageFile);
-                    }
-                }
-            }
-
-            File outputDirectory = new File(outputDirectoryPathForGreenImage);
-            if (!outputDirectory.exists()) {
-                outputDirectory.mkdirs();
-            }
-
-            if (!similarImages.isEmpty()) {
-                System.out.println("Similar images:");
-                for (File imageFile : similarImages) {
-                    String outputImagePath = outputDirectoryPathForGreenImage + File.separator + imageFile.getName();
-                    File outputFile = new File(outputImagePath);
-                    try {
-                        ImageIO.write(ImageIO.read(imageFile), "jpg", outputFile);
-                        System.out.println(outputImagePath);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            } else {
-                System.out.println("No similar images found.");
-            }
+        //TODO
+        searchImageForCropInputImage = new JButton("searchImageForCropInputImage");
+        searchImageForCropInputImage.setBounds(700 , 200, 300 , 30);
+        this.add(searchImageForCropInputImage);
+        //TODO
+        searchImageForResizeInputImage = new JButton("searchImageForResizeInputImage");
+        searchImageForResizeInputImage.setBounds(700 , 600, 300 , 30);
+        this.add(searchImageForResizeInputImage);
+        searchImageForResizeInputImage.addActionListener(
+                e -> {
+                SwingUtilities.invokeLater(new Runnable() {public void run() {new SearchResizeImageForMostColor();}});
+                });
+        //TODO search a lot of path directory
+        searchImageForGreenColorImage.addActionListener(
+                e -> {
+            SwingUtilities.invokeLater(() -> new ImageDisplayForGreenImage());
         });
-searchImageForSameDate.addActionListener(
-        e -> {
-            String targetImagePathForSameDate = pathForInitialImage ;
-            String searchDirectoryPathForSameDate  = "C:\\Users\\AbdAlrahman\\Desktop\\saves" ;
-            String outputDirectoryPathForSameDate = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\same_date";
+        searchImageForSameDate.addActionListener(
+                e -> {
+            String targetImagePath = pathForInitialImage;
+            String[] searchDirectoryPaths = {"C:\\Users\\AbdAlrahman\\Desktop\\saves"};
+            String outputDirectoryPath = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\sssssssssss";
 
-            File targetImageFile = new File(targetImagePathForSameDate);
-            if (!targetImageFile.exists()) {
-                System.out.println("Target image does not exist.");
-                return;
-            }
-
-            BufferedImage targetImage;
-            try {
-                targetImage = ImageIO.read(targetImageFile);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                return;
-            }
-
-            File searchDirectory = new File(searchDirectoryPathForSameDate);
-            if (!searchDirectory.exists()) {
-                System.out.println("Search directory does not exist.");
-                return;
-            }
-
-            File outputDirectory = new File(outputDirectoryPathForSameDate);
-            if (!outputDirectory.exists()) {
-                outputDirectory.mkdirs();
-            }
-
-            File[] imageFiles = searchDirectory.listFiles();
-            for (File imageFile : imageFiles) {
-                if (imageFile.isFile()) {
-                    try {
-                        BasicFileAttributes attrs = Files.readAttributes(imageFile.toPath(), BasicFileAttributes.class);
-                        Date creationDate = new Date(attrs.creationTime().toMillis());
-
-                        // تحويل التاريخ إلى سلسلة نصية باستخدام تنسيق محدد
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                        String targetDateStr = dateFormat.format(creationDate);
-                        String inputDateStr = dateFormat.format(targetImageFile.lastModified());
-
-                        if (inputDateStr.equals(targetDateStr)) {
-                            // تخزين الصورة المطابقة في المجلد المحدد
-                            String outputFilePath = outputDirectoryPathForSameDate + "/" + imageFile.getName();
-                            Path outputPath = Paths.get(outputFilePath);
-                            Files.copy(imageFile.toPath(), outputPath, StandardCopyOption.REPLACE_EXISTING);
-                            System.out.println("Image stored: " + outputFilePath);
-                        }
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            }
+            ImageSearchAndDisplay imageSearchAndDisplay = new ImageSearchAndDisplay();
+            imageSearchAndDisplay.searchAndDisplayImages(targetImagePath, searchDirectoryPaths, outputDirectoryPath);
         });
-searchImageForSameDimensions.addActionListener(
-        e -> {
-            String targetImagePathForSameDimensions = pathForInitialImage ;
-            String searchDirectoryPathForSameDimensions  = "C:\\Users\\AbdAlrahman\\Desktop\\saves" ;
-            String outputDirectoryPathForSameDimensions = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\same_dimensions"; // مسار المجلد الذي ستتم فيه تخزين الصور المطابقة
+        searchImageForSameDimensions.addActionListener(
+                e -> {
+            ImageDisplayForSameDimensions imageDisplay = new ImageDisplayForSameDimensions();
 
-            File targetImageFile = new File(targetImagePathForSameDimensions);
-            if (!targetImageFile.exists()) {
-                System.out.println("Target image does not exist.");
-                return;
-            }
-
-            BufferedImage targetImage;
-            try {
-                targetImage = ImageIO.read(targetImageFile);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                return;
-            }
-
-            int targetWidth = targetImage.getWidth();
-            int targetHeight = targetImage.getHeight();
-
-            File searchDirectory = new File(searchDirectoryPathForSameDimensions);
-            if (!searchDirectory.exists()) {
-                System.out.println("Search directory does not exist.");
-                return;
-            }
-
-            File outputDirectory = new File(outputDirectoryPathForSameDimensions);
-            if (!outputDirectory.exists()) {
-                outputDirectory.mkdirs();
-            }
-
-            File[] imageFiles = searchDirectory.listFiles();
-            for (File imageFile : imageFiles) {
-                if (imageFile.isFile()) {
-                    BufferedImage image;
-                    try {
-                        image = ImageIO.read(imageFile);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        continue;
-                    }
-
-                    int imageWidth = image.getWidth();
-                    int imageHeight = image.getHeight();
-
-                    if (imageWidth == targetWidth && imageHeight == targetHeight) {
-                        // تخزين الصورة المطابقة في المجلد المحدد
-                        String outputFilePath = outputDirectoryPathForSameDimensions + "/" + imageFile.getName();
-                        File outputFile = new File(outputFilePath);
-                        try {
-                            ImageIO.write(image, "jpg", outputFile);
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-
-                        System.out.println("Matching image found: " + imageFile.getAbsolutePath());
-                    }
-                }
-            }
         });
-searchImageForInputColor.addActionListener(
-        e -> {        String directoryPathForInputColor = "C:\\Users\\AbdAlrahman\\Desktop\\saves";
-            String outputDirectoryPathForInputColor = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\input_Image";
-
-            File directory = new File(directoryPathForInputColor);
-            File[] imageFiles = directory.listFiles();
-
-            List<File> similarImages = new ArrayList<>();
-
-            Color targetColor = new Color(255, 0, 0); // اللون المطلوب (يمكن تعديله هنا)
-
-            for (File imageFile : imageFiles) {
-                if (imageFile.isFile()) {
-                    BufferedImage image;
-                    try {
-                        image = ImageIO.read(imageFile);
-                    } catch (IOException eX) {
-                        eX.printStackTrace();
-                        continue;
-                    }
-
-                    if (image == null) {
-                        continue; // تجاهل الصورة إذا كانت غير صالحة
-                    }
-
-                    boolean isSimilar = checkColorSimilarity(image, targetColor);
-
-                    if (isSimilar) {
-                        similarImages.add(imageFile);
-                    }
+        searchImageForInputColor.addActionListener(
+                e -> {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    new ImageColorSimilarityForInputImage();
                 }
-            }
-
-            File outputDirectory = new File(outputDirectoryPathForInputColor);
-            if (!outputDirectory.exists()) {
-                outputDirectory.mkdirs();
-            }
-
-            if (!similarImages.isEmpty()) {
-                System.out.println("Similar images:");
-                for (File imageFile : similarImages) {
-                    String outputImagePath = outputDirectoryPathForInputColor + File.separator + imageFile.getName();
-                    File outputFile = new File(outputImagePath);
-                    try {
-                        ImageIO.write(ImageIO.read(imageFile), "jpg", outputFile);
-                        System.out.println(outputImagePath);
-                    } catch (IOException eX) {
-                        eX.printStackTrace();
-                    }
-                }
-            } else {
-                System.out.println("No similar images found.");
-            }
+            });
         });
-searchForMostImage.addActionListener(
-        e -> {
-            String targetImagePath = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\12.jpg";
-            String directoryPath = "C:\\Users\\AbdAlrahman\\Desktop\\saves";
-
-            File directory = new File(directoryPath);
-            File[] imageFiles = directory.listFiles();
-
-            BufferedImage targetImage;
-            try {
-                targetImage = ImageIO.read(new File(targetImagePath));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                return;
-            }
-
-            List<File> similarImages = new ArrayList<>();
-
-            for (File imageFile : imageFiles) {
-                if (imageFile.isFile()) {
-                    BufferedImage image;
-                    try {
-                        image = ImageIO.read(imageFile);
-                        if (image == null) {
-                            continue;
-                        }
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        continue;
-                    }
-
-                    if (image.getWidth() != targetImage.getWidth() || image.getHeight() != targetImage.getHeight()) {
-                        continue; // تخطي الصورة إذا كانت ليست لها نفس الأبعاد
-                    }
-
-                    double difference = compareImages(targetImage, image);
-
-                    double threshold = 100.0;
-                    if (difference < threshold) {
-                        similarImages.add(imageFile);
-                    }
+        searchImageForCropInputImage.addActionListener(
+                 e->{
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    new SearchCropImageForMostColor();
                 }
-            }
-
-            if (!similarImages.isEmpty()) {
-                System.out.println("Similar images found:");
-                for (File similarImage : similarImages) {
-                    System.out.println(similarImage.getAbsolutePath());
-                }
-            } else {
-                System.out.println("No similar images found.");
-            }
+            });
         });
-searchImageForRedColorImage.addActionListener(
-        e -> {
-            String targetImagePathForRedImage = pathForInitialImage;
-            String directoryPathForRedImage = "C:\\Users\\AbdAlrahman\\Desktop\\saves";
-            String outputDirectoryPathForRedImage = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\redImage"; // مسار المجلد الذي سيتم تخزين الصور فيه
-
-            File directory = new File(directoryPathForRedImage);
-            File[] imageFiles = directory.listFiles();
-
-            BufferedImage targetImage;
-            try {
-                targetImage = ImageIO.read(new File(targetImagePathForRedImage));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                return;
-            }
-
-            List<File> similarImages = new ArrayList<>();
-
-            for (File imageFile : imageFiles) {
-                if (imageFile.isFile()) {
-                    BufferedImage image;
-                    try {
-                        image = ImageIO.read(imageFile);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        continue;
-                    }
-
-                    if (image == null) {
-                        continue;
-                    }
-
-                    double redRatio = getRedRatio(image);
-
-                    // يمكن تعديل القيمة هنا بناءً على مدى اللون الأحمر المطلوب
-                    double redThreshold = 0.4;
-
-                    if (redRatio >= redThreshold) {
-                        similarImages.add(imageFile);
-                    }
-                }
-            }
-
-            // إنشاء مجلد لتخزين الصور الناتجة
-            File outputDirectory = new File(outputDirectoryPathForRedImage);
-            if (!outputDirectory.exists()) {
-                outputDirectory.mkdirs();
-            }
-
-            if (!similarImages.isEmpty()) {
-                System.out.println("Similar images:");
-                for (File imageFile : similarImages) {
-                    // حفظ الصور في المجلد الناتج
-                    String outputImagePath = outputDirectoryPathForRedImage + File.separator + imageFile.getName();
-                    File outputFile = new File(outputImagePath);
-                    try {
-                        ImageIO.write(ImageIO.read(imageFile), "jpg", outputFile);
-                        System.out.println(outputImagePath);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                }
-            } else {
-                System.out.println("No similar images found.");
-            }
-        });
-
-
-
     }
+
+
 //TODO ******************************************************************************************************************************
     //TODO This Methods For Search Green image
 private static double getGreenRatio(BufferedImage image) {
@@ -594,8 +274,245 @@ private static double compareImages(BufferedImage image1, BufferedImage image2) 
 
         return (double) redCount / totalPixels;
     }
+//TODO**********************************************************************************************************************************
+    //TODO This Methods  For Search Input Crop image
+    public static class ImageDisplayForGreenImage extends JFrame { public ImageDisplayForGreenImage() {
+            setTitle("Similar Images");
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setSize(600, 400);
+            setLocationRelativeTo(null);
+
+            JPanel panel = new JPanel();
+            panel.setLayout(new FlowLayout());
+
+            List<String> directoryPaths = new ArrayList<>();
+            directoryPaths.add("C:\\Users\\AbdAlrahman\\Desktop\\saves");
+            directoryPaths.add("C:\\Users\\AbdAlrahman\\Desktop\\another_folder");
+
+            String targetImagePath = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\12.jpg";
+            String outputDirectoryPath = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\greenImage";
+
+            List<File> similarImages = new ArrayList<>();
+
+            for (String directoryPathForGreenImage : directoryPaths) {
+                File directory = new File(directoryPathForGreenImage);
+                File[] imageFiles = directory.listFiles();
+
+                if (imageFiles != null) {
+                    for (File imageFile : imageFiles) {
+                        if (imageFile.isFile()) {
+                            BufferedImage image;
+                            try {
+                                image = ImageIO.read(imageFile);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                                continue;
+                            }
+
+                            if (image == null) {
+                                continue; // تجاهل الصورة إذا كانت غير صالحة
+                            }
+
+                            double greenRatio = getGreenRatio(image);
+
+                            // قيمة عتبة اللون الأخضر يمكن تعديلها هنا
+                            double greenThreshold = 1;
+
+                            if (greenRatio >= greenThreshold) {
+                                similarImages.add(imageFile);
+
+                                int scaledWidth = 200; // العرض المطلوب للصورة المصغرة
+                                int scaledHeight = 150; // الارتفاع المطلوب للصورة المصغرة
+                                Image scaledImage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+
+                                ImageIcon icon = new ImageIcon(scaledImage);
+                                JLabel label = new JLabel(icon);
+                                panel.add(label);
+                            }
+                        }
+                    }
+                }
+            }
+
+            JScrollPane scrollPane = new JScrollPane(panel);
+            add(scrollPane);
+
+            setVisible(true);
+        }}
+
+    public static class ImageSearchAndDisplay extends JFrame {
+        private JPanel panel;
+
+        public ImageSearchAndDisplay() {
+            setTitle("Image Search and Display");
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setSize(600, 400);
+            setLocationRelativeTo(null);
+
+            panel = new JPanel();
+            panel.setLayout(new FlowLayout());
+            JScrollPane scrollPane = new JScrollPane(panel);
+            add(scrollPane);
+
+            setVisible(true);
+        }
+
+        public void searchAndDisplayImages(String targetImagePath, String[] searchDirectoryPaths, String outputDirectoryPath) {
+            File targetImageFile = new File(targetImagePath);
+            if (!targetImageFile.exists()) {
+                System.out.println("Target image does not exist.");
+                return;
+            }
+
+            BufferedImage targetImage;
+            try {
+                targetImage = ImageIO.read(targetImageFile);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                return;
+            }
+
+            File outputDirectory = new File(outputDirectoryPath);
+            if (!outputDirectory.exists()) {
+                outputDirectory.mkdirs();
+            }
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String targetDateStr = dateFormat.format(targetImageFile.lastModified());
+
+            for (String searchDirectoryPath : searchDirectoryPaths) {
+                File searchDirectory = new File(searchDirectoryPath);
+                if (!searchDirectory.exists()) {
+                    System.out.println("Search directory does not exist: " + searchDirectoryPath);
+                    continue;
+                }
+
+                File[] imageFiles = searchDirectory.listFiles();
+                for (File imageFile : imageFiles) {
+                    if (imageFile.isFile()) {
+                        try {
+                            BasicFileAttributes attrs = Files.readAttributes(imageFile.toPath(), BasicFileAttributes.class);
+                            Date creationDate = new Date(attrs.creationTime().toMillis());
+                            String inputDateStr = dateFormat.format(creationDate);
+
+                            if (inputDateStr.equals(targetDateStr) && !imageFile.equals(targetImageFile)) {
+                                String outputFilePath = outputDirectoryPath + "/" + imageFile.getName();
+                                Path outputPath = Path.of(outputFilePath);
+                                Files.copy(imageFile.toPath(), outputPath, StandardCopyOption.REPLACE_EXISTING);
+                                System.out.println("Image stored: " + outputFilePath);
+
+                                BufferedImage image = ImageIO.read(imageFile);
+                                if (image != null) {
+                                    ImageIcon icon = new ImageIcon(image.getScaledInstance(150, 150, Image.SCALE_SMOOTH));
+                                    JLabel label = new JLabel(icon);
+                                    panel.add(label);
+                                    revalidate();
+                                    repaint();
+                                }
+                            }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public class ImageDisplayForSameDimensions extends JFrame {
+            private JPanel panel;
+
+            public ImageDisplayForSameDimensions() {
+                setTitle("Similar Images with Same Dimensions");
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                setSize(600, 400);
+                setLocationRelativeTo(null);
+
+                panel = new JPanel();
+                panel.setLayout(new FlowLayout());
+
+                String targetImagePath = pathForInitialImage;
+                String searchDirectoryPath = "C:\\Users\\AbdAlrahman\\Desktop\\saves";
+                String outputDirectoryPath = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\same_dimensions";
+
+                File targetImageFile = new File(targetImagePath);
+                if (!targetImageFile.exists()) {
+                    System.out.println("Target image does not exist.");
+                    return;
+                }
+
+                BufferedImage targetImage;
+                try {
+                    targetImage = ImageIO.read(targetImageFile);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    return;
+                }
+
+                int targetWidth = targetImage.getWidth();
+                int targetHeight = targetImage.getHeight();
+
+                File searchDirectory = new File(searchDirectoryPath);
+                if (!searchDirectory.exists()) {
+                    System.out.println("Search directory does not exist.");
+                    return;
+                }
+
+                File outputDirectory = new File(outputDirectoryPath);
+                if (!outputDirectory.exists()) {
+                    outputDirectory.mkdirs();
+                }
+
+                File[] imageFiles = searchDirectory.listFiles();
+                for (File imageFile : imageFiles) {
+                    if (imageFile.isFile()) {
+                        BufferedImage image;
+                        try {
+                            image = ImageIO.read(imageFile);
+                            if (image == null) {
+                                continue; // تجاهل الصورة إذا كانت غير صالحة
+                            }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                            continue;
+                        }
+
+                        int imageWidth = image.getWidth();
+                        int imageHeight = image.getHeight();
+
+                        if (imageWidth == targetWidth && imageHeight == targetHeight) {
+                            // تخزين الصورة المطابقة في المجلد المحدد
+                            String outputFilePath = outputDirectoryPath + "\\" + imageFile.getName();
+                            File outputFile = new File(outputFilePath);
+                            try {
+                                ImageIO.write(image, "jpg", outputFile);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+
+                            System.out.println("Matching image found: " + imageFile.getAbsolutePath());
+
+                            // عرض الصورة المطابقة على الـ JPanel
+                            int scaledWidth = 200; // العرض المطلوب للصورة المصغرة
+                            int scaledHeight = 150; // الارتفاع المطلوب للصورة المصغرة
+                            Image scaledImage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+
+                            ImageIcon icon = new ImageIcon(scaledImage);
+                            JLabel label = new JLabel(icon);
+                            panel.add(label);
+                        }
+                    }
+                }
+
+                JScrollPane scrollPane = new JScrollPane(panel);
+                add(scrollPane);
+
+                setVisible(true);
+            }
+        }
 
     @Override
     public void actionPerformed(ActionEvent e) {
     }
 }
+

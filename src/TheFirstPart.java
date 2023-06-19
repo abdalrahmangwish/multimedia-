@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Random;
 
 
-public class TheFirstPart extends JFrame implements  ActionListener {
+public class TheFirstPart extends JFrame implements ActionListener {
     //make interface
     JButton selectImage;
     JButton medianCut;
@@ -34,9 +34,9 @@ public class TheFirstPart extends JFrame implements  ActionListener {
     private JPanel imagePanel;
     private JPanel palettePanel;
 
-    String newPathForCutImage= "C:\\Users\\AbdAlrahman\\Desktop\\saves\\MCut_image\\"+ getImageName()+".gif";
-    String newPathForKMImage= "C:\\Users\\AbdAlrahman\\Desktop\\saves\\KM_image\\"+ getImageName()+".gif";
-    String newPathForIndexImage= "C:\\Users\\AbdAlrahman\\Desktop\\saves\\index_image\\"+ getImageName()+".gif";
+    String newPathForCutImage = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\MCut_image\\" + getImageName() + ".gif";
+    String newPathForKMImage = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\KM_image\\" + getImageName() + ".gif";
+    String newPathForIndexImage = "C:\\Users\\AbdAlrahman\\Desktop\\saves\\index_image\\" + getImageName() + ".gif";
 
     TheFirstPart() {
 
@@ -48,7 +48,7 @@ public class TheFirstPart extends JFrame implements  ActionListener {
         this.setLayout(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         wlecomeLabel = new JLabel("Hey let's go ");
-        wlecomeLabel.setBounds(50,0,500,20);
+        wlecomeLabel.setBounds(50, 0, 500, 20);
         this.add(wlecomeLabel);
         selectImage = new JButton("selectImage");
         selectImage.setBounds(50, 50, 150, 30);
@@ -60,21 +60,21 @@ public class TheFirstPart extends JFrame implements  ActionListener {
         medianCut = new JButton("Median Cut Color");
         medianCut.setBounds(500, 50, 200, 30);
         this.add(medianCut);
-        kMeansButton =new JButton("K-Means Color");
-        kMeansButton.setBounds(700 ,50,200,30);
+        kMeansButton = new JButton("K-Means Color");
+        kMeansButton.setBounds(700, 50, 200, 30);
         this.add(kMeansButton);
-        ImageLabelForAllLogarithm =  new JLabel();
-        ImageLabelForAllLogarithm.setBounds(1000,1000,500,500 );
+        ImageLabelForAllLogarithm = new JLabel();
+        ImageLabelForAllLogarithm.setBounds(1000, 1000, 500, 500);
         this.add(ImageLabelForAllLogarithm);
         indexButton = new JButton("index Image");
-        indexButton.setBounds(900, 50 , 200 , 30);
+        indexButton.setBounds(900, 50, 200, 30);
         this.add(indexButton);
         platteButton = new JButton("platteColorImage");
-        platteButton.setBounds(1100 , 50 , 200 , 30 );
+        platteButton.setBounds(1100, 50, 200, 30);
         this.add(platteButton);// TODO toKMeansColorLogarithm
         medianCut.addActionListener(
                 e -> {
-                    int numColors = 1000; // عدد الألوان المطلوبة في الصورة المقتطعة
+                    int numColors = 3; // عدد الألوان المطلوبة في الصورة المقتطعة
                     BufferedImage quantizedImage = null;
                     try {
                         // قراءة الصورة الأصلية
@@ -85,7 +85,7 @@ public class TheFirstPart extends JFrame implements  ActionListener {
 
                         // حفظ الصورة المقتطعة
                         File outputFile = new File(newPathForCutImage);
-                        ImageIO.write(quantizedImage, "png"+"jpg"+"gif", outputFile);
+                        ImageIO.write(quantizedImage, "png" + "jpg" + "gif", outputFile);
 
 
                         System.out.println("تمت عملية اظهار histogram ");
@@ -115,7 +115,7 @@ public class TheFirstPart extends JFrame implements  ActionListener {
                     }
                     ImageLabelForAllLogarithm.setIcon(new ImageIcon(quantizedImage));
                     JFrame frame = new JFrame();
-                    frame.getContentPane().setLayout( new FlowLayout());
+                    frame.getContentPane().setLayout(new FlowLayout());
                     frame.getContentPane().add(new JLabel(new ImageIcon(quantizedImage)));
                     frame.getContentPane().add(new HistogramColorExample(histogram));
                     frame.pack();
@@ -123,23 +123,22 @@ public class TheFirstPart extends JFrame implements  ActionListener {
                     ImageLabelForAllLogarithm.setIcon(new ImageIcon(quantizedImage));
 
                 }
-
         );
         kMeansButton.addActionListener(
                 e -> {
                     try {
-            // قراءة الصورة من ملف
-            BufferedImage image = ImageIO.read(new File(imagePath));
+                        // قراءة الصورة من ملف
+                        BufferedImage image = ImageIO.read(new File(imagePath));
 
-            // تطبيق خوارزمية K-Means على الصورة
-            int k = 16; // عدد التجميعات المطلوبة
-            BufferedImage quantizedImageForKM = quantizeImageForKM(image, k);
+                        // تطبيق خوارزمية K-Means على الصورة
+                        int k = 5; // عدد التجميعات المطلوبة
+                        BufferedImage quantizedImageForKM = quantizeImageForKM(image, k);
 
 
-            File outputImage = new File(newPathForKMImage);
-            ImageIO.write(quantizedImageForKM, "png", outputImage);
+                        File outputImage = new File(newPathForKMImage);
+                        ImageIO.write(quantizedImageForKM, "png", outputImage);
 
-            System.out.println("Image indexed successfully!");
+                        System.out.println("Image indexed successfully!");
                         int[] histogram = new int[256];
                         int width = image.getWidth();
                         int height = image.getHeight();
@@ -157,19 +156,18 @@ public class TheFirstPart extends JFrame implements  ActionListener {
                             }
                         }
 
-            // عرض الصورة المحسوبة في إطار جديد
-            JFrame frame = new JFrame();
-            frame.getContentPane().setLayout( new FlowLayout());
-            frame.getContentPane().add(new HistogramColorExample(histogram));
-            frame.getContentPane().add(new JLabel(new ImageIcon(quantizedImageForKM)));
-            frame.pack();
-            frame.setVisible(true);
+                        // عرض الصورة المحسوبة في إطار جديد
+                        JFrame frame = new JFrame();
+                        frame.getContentPane().setLayout(new FlowLayout());
+                        frame.getContentPane().add(new HistogramColorExample(histogram));
+                        frame.getContentPane().add(new JLabel(new ImageIcon(quantizedImageForKM)));
+                        frame.pack();
+                        frame.setVisible(true);
 
 
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
 
         );
@@ -209,7 +207,7 @@ public class TheFirstPart extends JFrame implements  ActionListener {
                             }
                         }
                         JFrame frame = new JFrame();
-                        frame.getContentPane().setLayout( new FlowLayout());
+                        frame.getContentPane().setLayout(new FlowLayout());
                         frame.getContentPane().add(new JLabel(new ImageIcon(indexImage)));
                         frame.getContentPane().add(new HistogramColorExample(histogram));
 
@@ -241,7 +239,7 @@ public class TheFirstPart extends JFrame implements  ActionListener {
         File file = fileChooser.getSelectedFile();
         String getSelectedImage = file.getAbsolutePath();
         System.out.println(file);
-        FileNameForBufferedImage =file;
+        FileNameForBufferedImage = file;
         System.out.println(FileNameForBufferedImage);
         ImageIcon imageIcon = new ImageIcon(getSelectedImage); // load the image to a imageIcon
         Image image = imageIcon.getImage(); // transform it
@@ -252,13 +250,14 @@ public class TheFirstPart extends JFrame implements  ActionListener {
         imagePath = filename;
 
     }
- //TODO ******************************************************************************************************************************
+
+    //TODO ******************************************************************************************************************************
     //TODO This Methods For Cut
     public static BufferedImage quantizeImageForCut(BufferedImage image, int numColors) {
-    List<Color> pixels = getPixelsForCut(image);
-    List<Color> quantizedColors = quantizeColorsForCut(pixels, numColors);
-    return replaceColorsForCut(image, quantizedColors);
-}
+        List<Color> pixels = getPixelsForCut(image);
+        List<Color> quantizedColors = quantizeColorsForCut(pixels, numColors);
+        return replaceColorsForCut(image, quantizedColors);
+    }
 
     private static List<Color> getPixelsForCut(BufferedImage image) {
         List<Color> pixels = new ArrayList<>();
@@ -273,20 +272,18 @@ public class TheFirstPart extends JFrame implements  ActionListener {
         return pixels;
     }
 
-        private static List<Color> quantizeColorsForCut(List<Color> pixels, int numColors) {
-            // Perform Median Cut Color Quantization algorithm here
-            // ...
-
-            // Placeholder code to return a subset of unique colors
-            List<Color> quantizedColorsForCut = new ArrayList<>();
-            for (int i = 0; i < numColors && i < pixels.size(); i++) {
-                Color color = pixels.get(i);
-                if (!quantizedColorsForCut.contains(color)) {
-                    quantizedColorsForCut.add(color);
-                }
+    private static List<Color> quantizeColorsForCut(List<Color> pixels, int numColors) {
+        // Perform Median Cut Color Quantization algorithm here
+        // ...
+        List<Color> quantizedColorsForCut = new ArrayList<>();
+        for (int i = 0; i < numColors ; i++) {
+            Color randomColor = pixels.get((int) (Math.random() * pixels.size()));
+            if (!quantizedColorsForCut.contains(randomColor)) {
+                quantizedColorsForCut.add(randomColor);
             }
-            return quantizedColorsForCut;
         }
+        return quantizedColorsForCut;
+    }
 
     private static BufferedImage replaceColorsForCut(BufferedImage image, List<Color> colors) {
         BufferedImage quantizedImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
@@ -315,42 +312,44 @@ public class TheFirstPart extends JFrame implements  ActionListener {
         }
         return closestColor;
     }
+
     private static int getDistanceForCut(Color color1, Color color2) {
         int redDiff = color1.getRed() - color2.getRed();
         int greenDiff = color1.getGreen() - color2.getGreen();
         int blueDiff = color1.getBlue() - color2.getBlue();
         return redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff;
     }
-// TODO ****************************************************************************************************************************
+
+    // TODO ****************************************************************************************************************************
     //TODO This Methods For KM
-public static BufferedImage quantizeImageForKM(BufferedImage image, int k) {
-    int width = image.getWidth();
-    int height = image.getHeight();
+    public static BufferedImage quantizeImageForKM(BufferedImage image, int k) {
+        int width = image.getWidth();
+        int height = image.getHeight();
 
-    // إنشاء قائمة بجميع الألوان في الصورة
-    java.util.List<Color> colors = new java.util.ArrayList<>();
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            Color pixelColor = new Color(image.getRGB(x, y));
-            colors.add(pixelColor);
+        // إنشاء قائمة بجميع الألوان في الصورة
+        java.util.List<Color> colors = new java.util.ArrayList<>();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color pixelColor = new Color(image.getRGB(x, y));
+                colors.add(pixelColor);
+            }
         }
-    }
 
-    // استدعاء خوارزمية K-Means لتجميع الألوان
-    java.util.List<Color> centroids = runKMeans(colors, k);
+        // استدعاء خوارزمية K-Means لتجميع الألوان
+        java.util.List<Color> centroids = runKMeans(colors, k);
 
-    // إنشاء الصورة المحسوبة
-    BufferedImage quantizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            Color pixelColor = new Color(image.getRGB(x, y));
-            Color closestColor = findClosestColorForKM(pixelColor, centroids);
-            quantizedImage.setRGB(x, y, closestColor.getRGB());
+        // إنشاء الصورة المحسوبة
+        BufferedImage quantizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color pixelColor = new Color(image.getRGB(x, y));
+                Color closestColor = findClosestColorForKM(pixelColor, centroids);
+                quantizedImage.setRGB(x, y, closestColor.getRGB());
+            }
         }
-    }
 
-    return quantizedImage;
-}
+        return quantizedImage;
+    }
 
     private static java.util.List<Color> runKMeans(java.util.List<Color> colors, int k) {
         // توليد مراكز عشوائية للتجميعات اللونية
@@ -466,7 +465,8 @@ public static BufferedImage quantizeImageForKM(BufferedImage image, int k) {
 
         return Math.sqrt(redDiff * redDiff + greenDiff * greenDiff + blueDiff * blueDiff);
     }
-  //TODO **************************************************************************************************************
+
+    //TODO **************************************************************************************************************
     //TODO This Methods To Save Index Image
     static IndexColorModel createIndexColorModel() {
         // Define the color palette for indexing
@@ -480,9 +480,10 @@ public static BufferedImage quantizeImageForKM(BufferedImage image, int k) {
         int transferType = DataBuffer.TYPE_BYTE;
 
         // Create the index color model
-        return new IndexColorModel(8, colors.length, colors, 0, false, -1,transferType);
+        return new IndexColorModel(8, colors.length, colors, 0, false, -1, transferType);
 
     }
+
     public static BufferedImage convertToIndexImage(BufferedImage originalImage) {
         // Create color palette
         IndexColorModel colorModel = createColorModel();
@@ -501,25 +502,28 @@ public static BufferedImage quantizeImageForKM(BufferedImage image, int k) {
 
     private static IndexColorModel createColorModel() {
         // Define your color palette
-        byte[] reds = {0, 127, (byte) 255};
-        byte[] greens = {0, 127, (byte) 255};
-        byte[] blues = {0, 127, (byte) 255};
+        byte[] reds = {(byte) 255, 0, 0};
+        byte[] greens = {0, (byte) 255, 0};
+        byte[] blues = {0, 0, (byte) 255};
 
-        return new IndexColorModel(8, reds.length, reds, greens, blues);}
+        return new IndexColorModel(8, reds.length, reds, greens, blues);
+    }
+
     //TODO Change Image Name And Get New Name
-    public static String getImageName(){
+    public static String getImageName() {
         int upperbound = 100000;
 
         Random rand = new Random();
 
         int int_random = rand.nextInt(upperbound);
 
-        return "imageName"+int_random;
+        return "imageName" + int_random;
     }
-     //TODO*************************************************************************************************************
-     private int[] histogram;
 
-     void HistogramColorExample(int[] histogram) {
+    //TODO*************************************************************************************************************
+    private int[] histogram;
+
+    void HistogramColorExample(int[] histogram) {
         this.histogram = histogram;
         setPreferredSize(new Dimension(256, 200));
     }
@@ -549,30 +553,31 @@ public static BufferedImage quantizeImageForKM(BufferedImage image, int k) {
         }
         return maxValue;
     }
-//TODO******************************************************************************************************************
+
+    //TODO******************************************************************************************************************
     //TODO This Methods For PaletteColor
-public void FastPaletteColorDisplay() {
-    setTitle("Fast Palette Color Display");
-    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setSize(800, 600);
-    setLocationRelativeTo(null);
+    public void FastPaletteColorDisplay() {
+        setTitle("Fast Palette Color Display");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLocationRelativeTo(null);
 
-    imagePanel = new JPanel() {
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (originalImage != null) {
-                g.drawImage(originalImage, 0, 0, null);
+        imagePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (originalImage != null) {
+                    g.drawImage(originalImage, 0, 0, null);
+                }
             }
-        }
-    };
+        };
 
-    palettePanel = new JPanel();
+        palettePanel = new JPanel();
 
-    getContentPane().setLayout(new BorderLayout());
-    getContentPane().add(imagePanel, BorderLayout.WEST);
-    getContentPane().add(palettePanel, BorderLayout.CENTER);
-}
+        getContentPane().setLayout(new BorderLayout());
+        getContentPane().add(imagePanel, BorderLayout.WEST);
+        getContentPane().add(palettePanel, BorderLayout.CENTER);
+    }
 
     private void loadImageForPalette(String imagePath) {
         try {
